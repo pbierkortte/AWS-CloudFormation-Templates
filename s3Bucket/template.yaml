@@ -29,6 +29,12 @@ Resources:
             NoncurrentVersionExpirationInDays: 180
             AbortIncompleteMultipartUpload:
               DaysAfterInitiation: 3
+      IntelligentTieringConfigurations:
+        - Id: ArchiveAfterTwoYears
+          Status: Enabled
+          Tierings:
+            - AccessTier: ARCHIVE_ACCESS
+              Days: 730
   S3BucketPolicy:
     Type: 'AWS::S3::BucketPolicy'
     DeletionPolicy: Retain
