@@ -1,0 +1,114 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  S3Bucket:
+    Type: 'AWS::S3::Bucket'
+    DeletionPolicy: Retain
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+      LifecycleConfiguration:
+        Rules:
+          - Id: WholeBucketRule
+            Status: Enabled
+            Transitions:
+              - TransitionInDays: 1
+                StorageClass: INTELLIGENT_TIERING
+            NoncurrentVersionTransition:
+              TransitionInDays: 1
+              StorageClass: INTELLIGENT_TIERING
+            ExpiredObjectDeleteMarker: True
+            NoncurrentVersionExpirationInDays: 180
+            AbortIncompleteMultipartUpload:
+              DaysAfterInitiation: 3
+  S3BucketPolicy:
+    Type: 'AWS::S3::BucketPolicy'
+    DeletionPolicy: Retain
+    Metadata:
+      Comment: >-
+
+        Implements the policy described at
+
+        http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingServerSideEncryption.html
+    Properties:
+      Bucket: !Ref S3Bucket
+      PolicyDocument:
+        Statement:
+          - Sid: DenyDeleteBucketPolicy
+            Effect: Deny
+            Principal: '*'
+            Action: 's3:DeleteBucketPolicy'
+            Resource: !Join 
+              - ''
+              - - 'arn:aws:s3:::'
+                - !Ref S3Bucket
+          - Sid: DenyDeleteBucket
+            Effect: Deny
+            Principal: '*'
+            Action: 's3:DeleteBucket'
+            Resource: !Join 
+              - ''
+              - - 'arn:aws:s3:::'
+                - !Ref S3Bucket
+          - Sid: DenyDeleteObjectVersion
+            Effect: Deny
+            Principal: '*'
+            Action: 's3:DeleteObjectVersion'
+            Resource: !Join 
+              - ''
+              - - 'arn:aws:s3:::'
+                - !Ref S3Bucket
+                - /*
+          - Sid: DenyNonEncryptedTransit
+            Effect: Deny
+            Principal: '*'
+            Action: 's3:*'
+            Resource:
+              - !Join 
+                - ''
+                - - 'arn:aws:s3:::'
+                  - !Ref S3Bucket
+              - !Join 
+                - ''
+                - - 'arn:aws:s3:::'
+                  - !Ref S3Bucket
+                  - /*
+            Condition:
+              Bool:
+                'aws:SecureTransport': false
+          - Sid: DenyIncorrectEncryptionHeader
+            Effect: Deny
+            Principal: '*'
+            Action: 's3:PutObject'
+            Resource: !Join 
+              - ''
+              - - 'arn:aws:s3:::'
+                - !Ref S3Bucket
+                - /*
+            Condition:
+              StringNotEquals:
+                's3:x-amz-server-side-encryption': AES256
+          - Sid: DenyUnEncryptedObjectUploads
+            Effect: Deny
+            Principal: '*'
+            Action: 's3:PutObject'
+            Resource: !Join 
+              - ''
+              - - 'arn:aws:s3:::'
+                - !Ref S3Bucket
+                - /*
+            Condition:
+              'Null':
+                's3:x-amz-server-side-encryption': 'true'
+Outputs:
+  BucketName:
+    Description: S3 Bucket
+    Value: !Ref S3Bucket
