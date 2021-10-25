@@ -25,7 +25,7 @@ Resources:
             NoncurrentVersionTransition:
               TransitionInDays: 1
               StorageClass: INTELLIGENT_TIERING
-            ExpiredObjectDeleteMarker: True
+            ExpiredObjectDeleteMarker: true
             NoncurrentVersionExpirationInDays: 180
             AbortIncompleteMultipartUpload:
               DaysAfterInitiation: 3
