@@ -17,7 +17,7 @@ Resources:
         Status: Enabled
       LifecycleConfiguration:
         Rules:
-          - Id: WholeBucketRule
+          - Id: MoveToIntelligentTiering
             Status: Enabled
             Transitions:
               - TransitionInDays: 1
@@ -72,9 +72,7 @@ Resources:
     DeletionPolicy: Retain
     Metadata:
       Comment: >-
-
         Implements the policy described at
-
         http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingServerSideEncryption.html
     Properties:
       Bucket: !Ref S3Bucket
