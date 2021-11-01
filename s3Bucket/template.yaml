@@ -17,7 +17,7 @@ Resources:
         Status: Enabled
       LifecycleConfiguration:
         Rules:
-          - Id: MoveToIntelligentTiering
+          - Id: WholeBucketRule
             Status: Enabled
             Transitions:
               - TransitionInDays: 1
@@ -30,44 +30,19 @@ Resources:
             AbortIncompleteMultipartUpload:
               DaysAfterInitiation: 3
       IntelligentTieringConfigurations:
-        - Id: MoveToArchive1
+        - Id: ArchiveAfterTwoYears
           Status: Enabled
           Tierings:
             - AccessTier: ARCHIVE_ACCESS
-              Days: 480
-          TagFilters:
-            - Key: ArchiveAccessTier
-              Value: Glacier
-        - Id: MoveToArchive2
-          Status: Enabled
-          Tierings:
-            - AccessTier: ARCHIVE_ACCESS
-              Days: 480
-          TagFilters:
-            - Key: ArchiveAccessTier
-              Value: glacier
-        - Id: MoveToArchive3
-          Status: Enabled
-          Tierings:
-            - AccessTier: ARCHIVE_ACCESS
-              Days: 480
-          TagFilters:
-            - Key: archiveaccesstier
-              Value: Glacier
-        - Id: MoveToArchive4
-          Status: Enabled
-          Tierings:
-            - AccessTier: ARCHIVE_ACCESS
-              Days: 480
-          TagFilters:
-            - Key: archiveaccesstier
-              Value: glacier  
+              Days: 730
   S3BucketPolicy:
     Type: 'AWS::S3::BucketPolicy'
     DeletionPolicy: Retain
     Metadata:
       Comment: >-
+
         Implements the policy described at
+
         http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingServerSideEncryption.html
     Properties:
       Bucket: !Ref S3Bucket
