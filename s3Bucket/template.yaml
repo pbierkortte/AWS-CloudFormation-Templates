@@ -17,7 +17,7 @@ Resources:
         Status: Enabled
       LifecycleConfiguration:
         Rules:
-          - Id: MoveToIntelligentTiering
+          - Id: WholeBucketRule
             Status: Enabled
             Transitions:
               - TransitionInDays: 1
@@ -66,13 +66,15 @@ Resources:
               Days: 480
           TagFilters:
             - Key: archiveaccesstier
-              Value: glacier  
+              Value: glacier
   S3BucketPolicy:
     Type: 'AWS::S3::BucketPolicy'
     DeletionPolicy: Retain
     Metadata:
       Comment: >-
+
         Implements the policy described at
+
         http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingServerSideEncryption.html
     Properties:
       Bucket: !Ref S3Bucket
