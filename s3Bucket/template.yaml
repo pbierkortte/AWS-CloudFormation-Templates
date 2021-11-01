@@ -34,7 +34,7 @@ Resources:
           Status: Enabled
           Tierings:
             - AccessTier: ARCHIVE_ACCESS
-              Days: 730
+              Days: 480
   S3BucketPolicy:
     Type: 'AWS::S3::BucketPolicy'
     DeletionPolicy: Retain
