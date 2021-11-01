@@ -17,7 +17,7 @@ Resources:
         Status: Enabled
       LifecycleConfiguration:
         Rules:
-          - Id: WholeBucketRule
+          - Id: MoveToIntelligentTiering
             Status: Enabled
             Transitions:
               - TransitionInDays: 1
@@ -30,7 +30,7 @@ Resources:
             AbortIncompleteMultipartUpload:
               DaysAfterInitiation: 3
       IntelligentTieringConfigurations:
-        - Id: ArchiveAfterTwoYears
+        - Id: MoveToArchive
           Status: Enabled
           Tierings:
             - AccessTier: ARCHIVE_ACCESS
