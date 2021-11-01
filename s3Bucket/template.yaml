@@ -35,6 +35,9 @@ Resources:
           Tierings:
             - AccessTier: ARCHIVE_ACCESS
               Days: 480
+          TagFilters:
+            - Key: Archive
+              Value: 'Yes'
   S3BucketPolicy:
     Type: 'AWS::S3::BucketPolicy'
     DeletionPolicy: Retain
