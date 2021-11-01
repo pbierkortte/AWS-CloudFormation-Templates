@@ -30,11 +30,43 @@ Resources:
             AbortIncompleteMultipartUpload:
               DaysAfterInitiation: 3
       IntelligentTieringConfigurations:
-        - Id: ArchiveAfterTwoYears
+        - Id: MoveToArchive
           Status: Enabled
           Tierings:
             - AccessTier: ARCHIVE_ACCESS
-              Days: 730
+              Days: 480
+        - Id: MoveToArchive1
+          Status: Disabled
+          Tierings:
+            - AccessTier: ARCHIVE_ACCESS
+              Days: 480
+          TagFilters:
+            - Key: ArchiveAccessTier
+              Value: Glacier
+        - Id: MoveToArchive2
+          Status: Disabled
+          Tierings:
+            - AccessTier: ARCHIVE_ACCESS
+              Days: 480
+          TagFilters:
+            - Key: ArchiveAccessTier
+              Value: glacier
+        - Id: MoveToArchive3
+          Status: Disabled
+          Tierings:
+            - AccessTier: ARCHIVE_ACCESS
+              Days: 480
+          TagFilters:
+            - Key: archiveaccesstier
+              Value: Glacier
+        - Id: MoveToArchive4
+          Status: Disabled
+          Tierings:
+            - AccessTier: ARCHIVE_ACCESS
+              Days: 480
+          TagFilters:
+            - Key: archiveaccesstier
+              Value: glacier
   S3BucketPolicy:
     Type: 'AWS::S3::BucketPolicy'
     DeletionPolicy: Retain
